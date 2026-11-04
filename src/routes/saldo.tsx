@@ -10,9 +10,6 @@ import { Button } from "@/components/ui/button";
 import { useClube, brl, type Atendimento } from "@/lib/clube-store";
 
 export const Route = createFileRoute("/saldo")({
-  validateSearch: (s: Record<string, unknown>): { resgatar?: boolean } => ({
-    resgatar: s.resgatar === true || s.resgatar === "true" ? true : undefined,
-  }),
   head: () => ({
     meta: [
       { title: "Saldo — Clube G7" },
@@ -26,14 +23,14 @@ export const Route = createFileRoute("/saldo")({
 
 function Saldo() {
   const { saldo, acumulado, resgatado, atendimentos, resgatar } = useClube();
-  const { resgatar: abrir } = Route.useSearch();
-  const navigate = useNavigate({ from: "/saldo" });
+  const { abrirResgate: abrir, setAbrirResgate } = useClube();
+  const navigate = useNavigate();
   const [avaliando, setAvaliando] = useState<Atendimento | null>(null);
   const [centavos, setCentavos] = useState(0);
   const valor = centavos / 100;
   const fecharResgate = () => {
     setCentavos(0);
-    navigate({ search: {} });
+    setAbrirResgate(false);
   };
 
   return (
@@ -41,7 +38,7 @@ function Saldo() {
       <section className="bg-wallet rounded-3xl p-5 text-navy-foreground shadow-lift animate-rise">
         <p className="text-xs font-semibold uppercase tracking-widest text-navy-foreground/60">Disponível</p>
         <p className="font-display mt-1 text-4xl font-extrabold">{brl(saldo)}</p>
-        <Button onClick={() => navigate({ search: { resgatar: true } })} size="lg" className="mt-5 h-12 w-full rounded-2xl font-bold shadow-glow">
+        <Button onClick={() => setAbrirResgate(true)} size="lg" className="mt-5 h-12 w-full rounded-2xl font-bold shadow-glow">
           Resgatar cashback <ArrowUpRight className="h-4 w-4" />
         </Button>
       </section>
@@ -106,7 +103,7 @@ function Saldo() {
                 resgatar(valor);
                 toast.success(`Resgate de ${brl(valor)} solicitado!`);
                 fecharResgate();
-                navigate({ to: "/resgates", search: {} as never });
+                navigate({ to: "/resgates" });
               }}
             >
               Confirmar resgate

@@ -48,12 +48,15 @@ type Store = {
   avaliar: (id: string, nota: number, comentario: string) => void;
   resgatar: (valor: number) => void;
   atualizarUsuario: (u: Usuario) => void;
+  abrirResgate: boolean;
+  setAbrirResgate: (v: boolean) => void;
 };
 
 const Ctx = createContext<Store | null>(null);
 
 export function ClubeProvider({ children }: { children: ReactNode }) {
   const [logado, setLogado] = useState(false);
+  const [abrirResgate, setAbrirResgate] = useState(false);
   const [atendimentos, setAtendimentos] = useState(atendimentosIniciais);
   const [resgates, setResgates] = useState<Resgate[]>([
     { id: "r1", data: "2026-05-12", valor: 1, status: "finalizado" },
@@ -91,6 +94,8 @@ export function ClubeProvider({ children }: { children: ReactNode }) {
             ...l,
           ]),
         atualizarUsuario: setUsuario,
+        abrirResgate,
+        setAbrirResgate,
       }}
     >
       {children}

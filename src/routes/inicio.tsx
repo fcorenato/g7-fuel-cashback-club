@@ -20,7 +20,7 @@ export const Route = createFileRoute("/inicio")({
 });
 
 function Inicio() {
-  const { usuario, saldo, atendimentos } = useClube();
+  const { usuario, saldo, atendimentos, setAbrirResgate } = useClube();
   const [avaliando, setAvaliando] = useState<Atendimento | null>(null);
   const pendente = atendimentos.find((a) => !a.avaliacao);
   const primeiroNome = usuario.nome.split(" ")[0];
@@ -48,7 +48,7 @@ function Inicio() {
           <p className="text-xs font-semibold uppercase tracking-widest text-navy-foreground/60">Saldo de cashback</p>
           <p className="font-display mt-1 text-4xl font-extrabold">{brl(saldo)}</p>
           <div className="mt-5 flex gap-2">
-            <Link to="/saldo" search={{ resgatar: true }} className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow">
+            <Link to="/saldo" onClick={() => setAbrirResgate(true)} className="flex flex-1 items-center justify-center gap-1.5 rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground shadow-glow">
               Resgatar <ArrowUpRight className="h-4 w-4" />
             </Link>
             <Link to="/saldo" className="flex flex-1 items-center justify-center rounded-2xl bg-navy-foreground/10 py-3 text-sm font-bold">
